@@ -1,11 +1,3 @@
-# 2026春季训练营总结报告：围绕 StarryOS Linux 兼容性的若干修复与探索 —— LetsWalkInLine
-
-作者：`LetsWalkInLine`
-
-项目：2026 春季开源操作系统训练营项目一：宏内核 StarryOS
-
-阶段性进展记录：[rcore-os/tgoskits#582](https://github.com/rcore-os/tgoskits/issues/582)
-
 ## 一、项目背景
 
 2026 春季开源操作系统训练营的项目阶段提供了多个实践方向。我参加的是项目一：宏内核 StarryOS。这个方向的核心任务是在已有 StarryOS / tgoskits 代码基础上，围绕 Linux 兼容性、真实应用运行和系统调用语义完善做增量改进。
@@ -68,7 +60,7 @@
 - `FUTEX_WAIT_BITSET` / `FUTEX_WAKE_BITSET` 对 `val3 == 0` 的参数校验。
 - robust-list owner death 对用户态 futex word 的 Linux ABI 更新方式。
 
-为了验证这些行为，我新增了 `test-futex-robust-list` 测例，直接使用 C 语言 raw `syscall()` 调用，尽量避免 glibc 或 pthread 封装掩盖内核行为。focused case 在多个架构上通过，测试达到 `64 pass, 0 fail`。
+为了验证这些行为，我新增了 `test-futex-robust-list` 测例，直接使用 C 语言 raw `syscall()` 调用，尽量避免 glibc 或 pthread 封装掩盖内核行为。该 PR 后 case 在多个架构上通过，测试达到 `64 pass, 0 fail`。
 
 #### 3.2.3 futex / robust-list 继续完善
 
@@ -194,7 +186,7 @@ PR [#1045](https://github.com/rcore-os/tgoskits/pull/1045) 经过了我一个星
 
 本次训练营毫无疑问是关于OS的，也的确让我对OS拥有了更加深入的理解。但在工作的过程中，我认为我收获最大的反而是如何与AI Agent协作进行大规模工程的局部理解和开发以及如何参与社区协作。
 
-在整篇文章涉及的scope里，我在相关工作中所花费的token总数为5.45亿，从GitHub copilot学生订阅，到中转站，到最后偷渡订阅ChatGPT Plus，为了获取强大的AI而无所不用其极。也是在这个过程中让我慢慢固定了spec驱动的TDD开发工作流，然而毫无疑问，在训练营之外面对其他的工作时，需要不断的更新和锻炼使用AI的能力，让AI更好的服务于我，而不是取代我。
+在整篇文章涉及的scope里，我在相关工作中所花费的token总数为5.45亿，从GitHub copilot学生订阅，到中转站，到最后订阅ChatGPT Plus，为了获取强大的AI而八仙过海各显神通。也是在这个过程中让我慢慢固定了spec驱动的TDD开发工作流，然而毫无疑问，在训练营之外面对其他的工作时，需要不断的更新和锻炼使用AI的能力，让AI更好的服务于我，而不是取代我。
 
 但很显然，AI无法实现我们向它许下的所有愿望。涉及内核状态、锁顺序、生命周期和错误码时，最终仍然需要自己确认。比如 cgroup membership 的 live count、process table 与 cgroup tree 的锁顺序、`ProcessData::Drop` 和 wait reap 的关系等问题，在前几次的协作中AI都没有发现，只有在多次review下才暴露出来。因此，AI 更像一个高效的辅助 reviewer，而不是可以替代工程判断的实现者。如果在使用AI的过程中放弃思考，那么产出的代码会变成技术债务，而非技术资产，由技术债堆积起来的繁荣泡沫，总有要破灭的一天。
 
